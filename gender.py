@@ -140,6 +140,9 @@ def formInput(fname):
   return np.matrix(x)
 
 def analyze(name, certainty:float = 0.1):
+  if ' ' in name: name = name[:name.find(' ')]
+  if not name: raise ValueError('Blank name')
+  
   X = formInput(name)
   h1 = sigmoid (X * Theta1.T)
   h1 = np.c_ [np.ones(1), h1]
