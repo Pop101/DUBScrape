@@ -9,23 +9,23 @@ from gender import analyze
 
 def classify(info):
     # Attempt to put info into one of the following categories:
-    classified_info = {'email': [], 'phone': [], 'address': [], 'standing': [], 'info': []}
+    classified_info = {'email': set(), 'phone': set(), 'address': set(), 'standing': set(), 'info': set()}
     for i in info:
         if re.match(r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$', i):
-            classified_info['email'].append(i)
+            classified_info['email'].add(i)
             
         elif re.match(r'^(phone|mobile)', i, re.IGNORECASE):
             i = re.sub(r'^(phone|mobile)(:?)', '', i, flags=re.IGNORECASE).strip()
-            classified_info['phone'].extend(i.split(','))
+            classified_info['phone'].update(i.split(','))
             
         elif re.match(r'((NE|NW|SE|SW)\s)|(Box|box)\s[0-9]+', i):
-            classified_info['address'].append(i)
+            classified_info['address'].add(i)
             
         elif re.match(r'freshman|sophomore|junior|senior|graduate|lecturer|professor|teach(er|ing)|dean|affiliate|associate|adjunct|faculty|staff|technician|supv|research|lead', i, flags=re.IGNORECASE):
-            classified_info['standing'].append(i)
+            classified_info['standing'].add(i)
             
         else:
-            classified_info['info'].append(i)
+            classified_info['info'].add(i)
     return classified_info    
 
 
@@ -53,7 +53,7 @@ if __name__ == '__main__':
                 info = {**info, 'gender': gender['result'], 'certainty': gender['diff']}
                 
                 # Normalize lists
-                info = {k: (', '.join(v) if isinstance(v, list) else v) for k, v in info.items()}
+                info = {k: (', '.join(v) if isinstance(v, set) else v) for k, v in info.items()}
                 
                 # Record info
                 writer.writerow(info)  
