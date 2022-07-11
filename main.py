@@ -14,8 +14,8 @@ def classify(info):
         if re.match(r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$', i):
             classified_info['email'].append(i)
             
-        elif i.lower().startswith('phone'):
-            i = re.sub(r'^phone(:?)', '', i, flags=re.IGNORECASE).strip()
+        elif re.match(r'^(phone|mobile)', i, re.IGNORECASE):
+            i = re.sub(r'^(phone|mobile)(:?)', '', i, flags=re.IGNORECASE).strip()
             classified_info['phone'].extend(i.split(','))
             
         elif re.match(r'((NE|NW|SE|SW)\s)|(Box|box)\s[0-9]+', i):
